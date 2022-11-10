@@ -28,7 +28,7 @@ create table dragon
 create table danger
 (
     name            text primary key,
-    meeting_chance  float check (meeting_chance between 0.1 and 0.99) not null,
+    meeting_chance  float check (meeting_chance between 0.1 and 0.99)   not null,
     escaping_chance float check (escaping_chance between 0.33 and 0.99) not null
 );
 
@@ -64,7 +64,7 @@ create table student
 create table participant
 (
     name              text references student (name) on delete restrict on update cascade primary key,
-    points            int check (points between 0 and 80)                                         not null,
+    points            int check (points between 0 and 80)                                          not null,
     fighting_method   text references fighting_method (name) on delete restrict on update cascade  not null,
     breathing_method  text references breathing_method (name) on delete restrict on update cascade not null,
     name_of_sacrifice text references student (name) on delete restrict on update cascade          not null
