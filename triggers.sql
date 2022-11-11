@@ -1,7 +1,7 @@
 create or replace function delete_extra_participants() returns trigger as
 $$
 begin
-
+    delete from participant where participant.name in (select name from participant order by random() limit 5);
     return null;
 end;
 $$ language plpgsql;
