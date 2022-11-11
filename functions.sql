@@ -26,17 +26,27 @@ begin
 end;
 $$ language plpgsql;
 
---Не работает
 create or replace procedure set_random_sacrifices() as
 $$
+declare
+    sacrifices   text[];
+    participants text[];
 begin
-    update participant
-    set name_of_sacrifice = s.name
-    from (select student.name
-          from student
-          where student.name not in (select name from participant)
-          order by random()
-          limit 8) as s;
+    sacrifices := array(select student.name
+                        from student
+                        where student.name not in (select participant.name from participant)
+                        order by random()
+                        limit 7);
+
+    participants := array(select participant.name
+                          from participant);
+
+    for i in 0..7
+        loop
+            update participant
+            set name_of_sacrifice = sacrifices[i]
+            where participant.name = participants[i];
+        end loop;
 end;
 $$ language plpgsql;
 
@@ -52,7 +62,7 @@ begin
     select student.name, 0, get_random_fighting_method(), get_random_breathing_method(), student.name
     from student
     order by random()
-    limit 8;
+    limit 7;
     return query (select participant.name from participant);
 end;
 $$ language plpgsql;
